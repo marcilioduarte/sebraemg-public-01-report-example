@@ -3,20 +3,20 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.offline as py
-from wordcloud import WordCloud
 import folium
 from folium import Figure
 from branca.element import Figure
 from IPython.display import HTML
-import base64
 import plotly.graph_objs as go
-import ast
 import requests
+import io
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
-df = pd.read_excel(r'data\empresas_ariel_3.xlsx')
+url = 'https://github.com/marcilioduarte/work-sebraemg-public/raw/main/data/empresas_ariel_3.xlsx'
+
+df = pd.read_excel(url, engine='openpyxl')
 
 def grafico_1(df):
     # Filtrando o DataFrame df para empresas ativas (situacao_cadastral igual a 2)
