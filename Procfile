@@ -1,1 +1,1 @@
-web: python d_adhoc_01.py
+web: gunicorn d_adhoc_01:app
