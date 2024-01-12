@@ -1,14 +1,29 @@
 <!DOCTYPE html>
 <html>
 </head>
+    <link rel="stylesheet" type="text/css" href="static\design.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Alegreya+Sans&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <body>
-    <h1>Relatório - Dados de Atendimento do Sebrae Minas</h1>
-    <h2>Municípios de Araxá, Araguari, Frutal, Ituiutaba, Uberaba e Uberlândia.</h2>
-
+    <nav>
+        <div class="nav-title">
+          <img src="{{ url_for('static', filename='inteligencia-sebrae-icon.svg') }}" alt="Ícone Sebrae" class="header-icon"> <!-- Atualize com o nome do seu arquivo de ícone -->  
+        </div>
+        <ul class="nav-links">
+            <li><a href="#sobre">Sobre</a></li>
+            <li><a href="#graficos123">Gráficos 1, 2 e 3</a></li>
+            <li><a href="#grafico4">Gráfico 4</a></li>
+            <li><a href="#mapa">Mapa</a></li>
+        </ul>
+    </nav>    
+    <div id="sobre">
+    <h2>Relatório - Dados de Atendimento do Sebrae Minas.</h2>
     <!-- Informações sobre o relatório -->
     <h3>Sobre o Relatório:</h3>
     <p>Este é um relatório analítico do projeto piloto que cruza dados da Receita Federal (RF), do Google Maps e do BIS Atendimento para embasar ações estratégicas do Sebrae Minas, desenvolvido pela equipe da UINE.</p>
-
+    <p>O caso foi aplicado em parceria com a Regional Triângulo para os municípios de Araxá, Araguari, Frutal, Ituiutaba, Uberaba e Uberlândia</p>  
     <h3>Sobre os Dados Utilizados:</h3>
     <p>Fizemos uma extração dos dados abertos de empresas da Receita Federal (RF) filtrando desse conjunto de dados as empresas:</p>
     <ul>
@@ -37,10 +52,11 @@
     <p>Além disso, incluímos nessa base os dados de regionalização do Sebrae Minas e o resultado da consulta retornou um total de 25.553 empresas.</p>
     <p>Posteriormente, cruzamos esses dados com dados do BISMG para identificar a partir do CNPJ das empresas quais das 25.553 empresas tiveram algum tipo de atendimento.</p>
     <p>Com isso, construímos um novo conjunto de dados e abaixo estão alguns códigos e visualizações para facilitar o processo analítico dos dados.</p>
-
+    </div>
     <!-- Área para Exibição dos Primeiros Gráficos -->
-    <div>
+    <div id="graficos123" class="graficos-123">
         <!-- Gráficos automáticos -->
+        <br>
         <h3>Gráfico 1:</h3>
         {{ grafico1_html|safe }}
         <p>Algumas análises que podemos extrair dos gráficos são:</p>
@@ -48,7 +64,8 @@
             <li>Uberlândia, Uberaba e Ituiutaba tem uma percentual semelhante de empresas ativas (aprox. 72%) e inaptas (aprox. 28%);</li>
             <li>Araxá e Frutal se destacam positivamente por ter um percentual maior de empresas ativas (76%) e menor de empresas inaptas (23%); e</li>
             <li>Araguari se destaca negativamente por ter um percentual relativamente maior de empresas inaptas do que os demais municípios (29,5%) e menor de empresas ativas (70,5%).</li>
-        </ul>       
+        </ul>
+        <br>       
         <h3>Gráfico 2:</h3>                 
         {{ grafico2_html|safe }}
         <p>Algumas análises que podemos extrair dos gráficos são:</p>
@@ -56,93 +73,132 @@
             <li>Araxá, Frutal e Ituiutaba tem uma percentual semelhante e relativamente alto de empresas atendidas (de 35% a 40%).;</li>
             <li>Uberaba tem um percentual médio, de 25,7% de empresas atendidas; e</li>
             <li>Já Araguari e Uberlândia tem um percentual menor de empresas atendidas, de aproximadamente 22% e 18%, respectivamente.</li>
-        </ul>   
+        </ul>
+        <br>   
         <h3>Gráfico 3:</h3>                 
         {{ grafico3_html|safe }}
         <p>Quando avaliamos as empresas atendidas e não atendidas de forma segregada por atividade ou inaptidão, a distribuição a nível municipal segue o mesmo padrão, com Araxá, Ituiutaba e Frutal sendo as cidades com mais atendimentos dentro do universo, Uberaba sendo a cidade com um nível médio de atendimentos e Araguari e Uberlândia sendo as cidades com menor percentual de empresas atendidas.</p>
         <p>Entretanto, a intensidade dos atendimentos muda quando avaliamos a situação cadastral atual das empresas, sendo que dentre as empresas atualmente ativas há um aumento considerável no percentual de empresas atendidas e entre as empresas inaptas há uma redução significativa.</p>
     </div>
-    <!-- Formulário para Seleção do Município -->
-    <form action="/segregacao-cnae" method="post">
-        <label for="municipio">Selecione um Município:</label>
-        <select name="municipio" id="municipio">
-            {% for opcao in municipios %}
-                <option value="{{ opcao }}">{{ opcao }}</option>
-            {% endfor %}
-        </select>
-        <br>
-        <input type="submit" value="Gerar Gráfico">
-    </form>
-    
     <!-- Área para Exibir o Gráfico 4 -->
-    {% if grafico4_html %}
-    <div>
-        <h3>Gráfico 4: Segregação de Empresas Atendidas e Não Atendidas por CNAE</h3>
-        {{ grafico4_html|safe }}
-    </div>
-    {% endif %}
-
-    <form action="/mapa" method="post">
-        <div>
-            <label for="situacao_cadastral">Sit. Cadast.</label>
-            <select name="situacao_cadastral" id="situacao_cadastral">
-                {% for opcao in situacao_cadastral %}
-                    <option value="{{ opcao }}">{{ opcao }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div>
-            <label for="foi_atendido">Atendida?</label>
-            <select name="foi_atendido" id="foi_atendido">
-                {% for opcao in foi_atendido %}
-                    <option value="{{ opcao }}">{{ opcao }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div>
-            <label for="porte_empresa">Porte</label>
-            <select name="porte_empresa" id="porte_empresa">
-                {% for opcao in porte_empresa %}
-                    <option value="{{ opcao }}">{{ opcao }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div>
-            <label for="opcao_mei">Opção MEI</label>
-            <select name="opcao_mei" id="opcao_mei">
-                {% for opcao in opcao_mei %}
-                    <option value="{{ opcao }}">{{ opcao }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div>
-            <label for="municipio">Município</label>
+    <div id="grafico4" class="grafico4">
+        <br>      
+        <h3>Gráfico 4:</h3>
+        <form action="/segregacao-cnae" method="post">
+            <label for="municipio">Selecione um Município:</label>
             <select name="municipio" id="municipio">
                 {% for opcao in municipios %}
                     <option value="{{ opcao }}">{{ opcao }}</option>
                 {% endfor %}
             </select>
-        </div>
-
-        <div>
-            <label for="cnae">CNAE</label>
-            <select name="cnae" id="cnae">
-                {% for opcao in cnae %}
-                    <option value="{{ opcao }}">{{ opcao }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <input type="submit" value="Gerar Mapa">
-    </form>
-
-    {% if mapa_html %}
-        <div>{{ mapa_html|safe }}</div>
-    {% endif %}
-
+            <br>
+            <input type="submit" value="Gerar Gráfico">
+        </form>
+        {% if grafico4_html %}
+            {{ grafico4_html|safe }}
+        {% endif %}
+    </div>
+    <div id="mapa" class="graficos-123">
+        <br>
+        <h3>Mapa</h3>
+        <form action="/mapa" method="post">
+            <div class="form-row">
+                <div>
+                    <label for="situacao_cadastral">Sit. Cadast.</label>
+                    <select class="select2" name="situacao_cadastral" id="situacao_cadastral" multiple="multiple">
+                      {% for opcao in situacao_cadastral %}
+                        <option value="{{ opcao }}">{{ opcao }}</option>
+                      {% endfor %}
+                    </select>
+                    <button type="button" class="select-all" data-target="#situacao_cadastral">Selecionar Tudo</button>
+                    <button type="button" class="deselect-all" data-target="#situacao_cadastral">Desmarcar Tudo</button>
+                </div>
+        
+                <div>
+                    <label for="foi_atendido">Atendida?</label>
+                    <select class="select2" name="foi_atendido" id="foi_atendido" multiple="multiple">
+                      {% for opcao in foi_atendido %}
+                        <option value="{{ opcao }}">{{ opcao }}</option>
+                      {% endfor %}
+                    </select>
+                    <button type="button" class="select-all" data-target="#foi_atendido">Selecionar Tudo</button>
+                    <button type="button" class="deselect-all" data-target="#foi_atendido">Desmarcar Tudo</button>
+                </div>
+                  
+        
+                <div>
+                    <label for="porte_empresa">Porte</label>
+                    <select class="select2" name="porte_empresa" id="porte_empresa" multiple="multiple">
+                      {% for opcao in porte_empresa %}
+                        <option value="{{ opcao }}">{{ opcao }}</option>
+                      {% endfor %}
+                    </select>
+                    <button type="button" class="select-all" data-target="#porte_empresa">Selecionar Tudo</button>
+                    <button type="button" class="deselect-all" data-target="#porte_empresa">Desmarcar Tudo</button>
+                </div>
+        
+                <div>
+                    <label for="opcao_mei">Opção MEI</label>
+                    <select class="select2" name="opcao_mei" id="opcao_mei" multiple="multiple">
+                      {% for opcao in opcao_mei %}
+                        <option value="{{ opcao }}">{{ opcao }}</option>
+                      {% endfor %}
+                    </select>
+                    <button type="button" class="select-all" data-target="#opcao_mei">Selecionar Tudo</button>
+                    <button type="button" class="deselect-all" data-target="#opcao_mei">Desmarcar Tudo</button>
+                </div>
+                  
+        
+                <div>
+                    <label for="municipio">Município</label>
+                    <select class="select2" name="municipio" id="municipio" multiple="multiple">
+                      {% for opcao in municipios %}
+                        <option value="{{ opcao }}">{{ opcao }}</option>
+                      {% endfor %}
+                    </select>
+                    <button type="button" class="select-all" data-target="#municipio">Selecionar Tudo</button>
+                    <button type="button" class="deselect-all" data-target="#municipio">Desmarcar Tudo</button>
+                </div>
+                  
+        
+                <div>
+                    <label for="cnae">CNAE</label>
+                    <select class="select2" name="cnae" id="cnae" multiple="multiple">
+                      {% for opcao in cnae %}
+                        <option value="{{ opcao }}">{{ opcao }}</option>
+                      {% endfor %}
+                    </select>
+                    <button type="button" class="select-all" data-target="#cnae">Selecionar Tudo</button>
+                    <button type="button" class="deselect-all" data-target="#cnae">Desmarcar Tudo</button>
+                </div>
+                  
+            </div>
+            <input type="submit" value="Gerar Mapa">
+        </form>
+        {% if mapa_html %}
+            <div>{{ mapa_html|safe }}</div>
+        {% endif %}
+    </div>
+    <script>
+        $(document).ready(function() {
+          $('.select2').select2({
+            placeholder: "Selecione uma opção",
+            allowClear: true,
+            width: '100%'
+          });
+      
+          $('.select-all').click(function(){
+            var target = $(this).data('target');
+            $(target).find('option').prop('selected','selected');
+            $(target).trigger('change');
+          });
+      
+          $('.deselect-all').click(function(){
+            var target = $(this).data('target');
+            $(target).find('option').removeAttr('selected');
+            $(target).trigger('change');
+          });
+        });
+    </script>  
 </body>
 </html>

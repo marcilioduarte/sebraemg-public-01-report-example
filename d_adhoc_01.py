@@ -34,6 +34,8 @@ df['porte_empresa'] = df['porte_empresa'].map(dict_porte_empresa)
 df['data_inicio_atividade'] = pd.to_datetime(df['data_inicio_atividade'], format='%Y%m%d')
 df['data_inicio_atividade'] = df['data_inicio_atividade'].dt.strftime('%d/%m/%Y')
 
+df['opcao_mei'].fillna('Não identificado', inplace=True)
+
 def grafico_1(df):
     # Filtrando o DataFrame df para empresas ativas (situacao_cadastral igual a 2)
     df_ativas = df[df['situacao_cadastral'] == 'Ativa']
@@ -65,7 +67,7 @@ def grafico_1(df):
                 color_discrete_sequence=cores)
 
     # Atualizar o layout
-    fig.update_layout(xaxis_title=None, yaxis_title='Percentual de Empresas', plot_bgcolor='rgba(0,0,0,0)')
+    fig.update_layout(xaxis_title=None, yaxis_title='Percentual de Empresas', plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9', font=dict(color="#000000"))
 
     # Adicionar rótulos de texto personalizados
     fig.update_traces(texttemplate='%{y:.2f}%', textposition='inside')
@@ -110,7 +112,7 @@ def grafico_2(df):
                 color_discrete_sequence=cores)
 
     # Atualizando o layout para tornar o gráfico mais legível
-    fig.update_layout(xaxis_title=None, yaxis_title='Percentual de Empresas', plot_bgcolor='rgba(0,0,0,0)')
+    fig.update_layout(xaxis_title=None, yaxis_title='Percentual de Empresas', plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9', font=dict(color="#000000"))
 
     # Adicionando rótulos de texto personalizados
     fig.update_traces(texttemplate='%{y:.2f}%', textposition='inside')
@@ -168,7 +170,7 @@ def grafico_3(df):
 
 
         # Atualizar o layout para tornar o gráfico mais legível
-        fig.update_layout(xaxis_title=None, yaxis_title='Percentual de Empresas', plot_bgcolor='rgba(0,0,0,0)')
+        fig.update_layout(xaxis_title=None, yaxis_title='Percentual de Empresas', plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9', font=dict(color="#000000"))
 
         # Adicionar rótulos de texto personalizados
         fig.update_traces(texttemplate='%{y:.2f}%', textposition='inside', 
@@ -211,8 +213,10 @@ def grafico_4(df, municipio):
                     xaxis=dict(title='CNAE'),
                     yaxis=dict(title='Nº de Empresas'),
                     barmode='stack',
-                    plot_bgcolor='rgba(0,0,0,0)',
-                    width=1200, height=800)  # Definindo width e height
+                    plot_bgcolor='#f9f9f9', 
+                    paper_bgcolor='#f9f9f9', 
+                    font=dict(color="#000000"),
+                    height=800)  # Definindo width e height
     fig = go.Figure(data=data, layout=layout)
     fig.update_xaxes(categoryorder='total descending')
     
@@ -220,9 +224,6 @@ def grafico_4(df, municipio):
     fig.update_traces(textposition='outside')
     return fig.to_html(full_html=False)
 
-
-
-    
 ### Gerando APP
 
 @app.route('/')
@@ -235,12 +236,12 @@ def relatorio():
     municipio_padrao = df['municipio'].unique()[0]
     grafico4_html = grafico_4(df, municipio_padrao)
     
-    municipios = df['municipio'].unique().tolist()
-    situacao_cadastral_opcoes = df['situacao_cadastral'].unique().tolist()
-    foi_atendido_opcoes = df['foi_atendido'].unique().tolist()
-    porte_empresa_opcoes = df['porte_empresa'].unique().tolist()
-    opcao_mei_opcoes = df['opcao_mei'].unique().tolist()
-    cnae_opcoes = df['ds_cnae'].unique().tolist()
+    municipios = sorted(df['municipio'].unique().tolist())
+    situacao_cadastral_opcoes = sorted(df['situacao_cadastral'].unique().tolist())
+    foi_atendido_opcoes = sorted(df['foi_atendido'].unique().tolist())
+    porte_empresa_opcoes = sorted(df['porte_empresa'].unique().tolist())
+    opcao_mei_opcoes = sorted(df['opcao_mei'].unique().tolist())
+    cnae_opcoes = sorted(df['ds_cnae'].unique().tolist())
     
     return render_template('relatorio.html', 
                            grafico1_html=grafico1_html, 
@@ -256,12 +257,12 @@ def relatorio():
 
 @app.route('/segregacao-cnae', methods=['GET', 'POST'])
 def grafico_municipio():
-    municipios = df['municipio'].unique().tolist()
-    situacao_cadastral_opcoes = df['situacao_cadastral'].unique().tolist()
-    foi_atendido_opcoes = df['foi_atendido'].unique().tolist()
-    porte_empresa_opcoes = df['porte_empresa'].unique().tolist()
-    opcao_mei_opcoes = df['opcao_mei'].unique().tolist()
-    cnae_opcoes = df['ds_cnae'].unique().tolist()
+    municipios = sorted(df['municipio'].unique().tolist())
+    situacao_cadastral_opcoes = sorted(df['situacao_cadastral'].unique().tolist())
+    foi_atendido_opcoes = sorted(df['foi_atendido'].unique().tolist())
+    porte_empresa_opcoes = sorted(df['porte_empresa'].unique().tolist())
+    opcao_mei_opcoes = sorted(df['opcao_mei'].unique().tolist())
+    cnae_opcoes = sorted(df['ds_cnae'].unique().tolist())
     
     if request.method == 'POST':
         municipio_selecionado = request.form.get('municipio')
@@ -289,12 +290,12 @@ def grafico_municipio():
 @app.route('/mapa', methods=['GET', 'POST'])
 def index():
     # Inicialize variáveis comuns
-    municipios = df['municipio'].unique().tolist()
-    situacao_cadastral_opcoes = df['situacao_cadastral'].unique().tolist()
-    foi_atendido_opcoes = df['foi_atendido'].unique().tolist()
-    porte_empresa_opcoes = df['porte_empresa'].unique().tolist()
-    opcao_mei_opcoes = df['opcao_mei'].unique().tolist()
-    cnae_opcoes = df['ds_cnae'].unique().tolist()
+    municipios = sorted(df['municipio'].unique().tolist())
+    situacao_cadastral_opcoes = sorted(df['situacao_cadastral'].unique().tolist())
+    foi_atendido_opcoes = sorted(df['foi_atendido'].unique().tolist())
+    porte_empresa_opcoes = sorted(df['porte_empresa'].unique().tolist())
+    opcao_mei_opcoes = sorted(df['opcao_mei'].unique().tolist())
+    cnae_opcoes = sorted(df['ds_cnae'].unique().tolist())
 
     # Geração dos primeiros 3 gráficos
     grafico1_html = grafico_1(df)

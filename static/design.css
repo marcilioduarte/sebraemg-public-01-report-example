@@ -1,0 +1,116 @@
+h1, h2, h3, h4, h5, h6, p, li, div {
+  font-family: 'Alegreya Sans', sans-serif;
+}
+
+h1 {
+  font-size: 36px; /* Ajuste para o tamanho desejado */
+}
+
+h2, h3 {
+  font-size: 28px; /* Ajuste para o tamanho desejado */
+}
+
+p {
+  font-size: 18px; /* Ajuste para o tamanho desejado */
+}
+
+
+body {
+background-color: #f9f9f9;
+color: #000000;
+padding-top: 80px; /* Ajuste para a barra de navegação */
+}
+nav {
+  background-color: #f9f9f9; 
+  color: #005eb8;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  font-size: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+nav ul li {
+  float: left;
+}
+nav ul li a {
+  display: block;
+  color: #005eb8;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-weight: bold;
+}
+nav ul li a:hover {
+  background-color: #004b87;
+  color: #f9f9f9;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+.graficos-123, #mapa {
+background-color: #f9f9f9;
+text-align: center;
+color: #000000;
+font-size: large;
+}
+#grafico4 {
+  background-color: #f9f9f9;
+  color: #000000;
+  text-align: center;
+  font-size: large;
+}
+
+.graficos-123 > *, #grafico4 > * {
+  margin: 0 auto; /* Centraliza os elementos filhos */
+  max-width: 100%; /* Limita a largura máxima para evitar estouro */
+}
+
+.nav-title {
+  display: flex;
+  align-items: center; /* Centraliza verticalmente o ícone com o texto */
+}
+
+.nav-links {
+  list-style-type: none;
+  margin: 0;
+  padding-right: 40px;
+  overflow: hidden;
+  display: flex;
+}
+
+.nav-links li {
+  float: none; /* Remove o float, pois estamos usando flexbox */
+}
+
+.nav-links li a {
+  display: block;
+  color: #005eb8; /* Cor do texto azul Sebrae */
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.nav-links li a:hover {
+  background-color: #004b87; /* Fundo mais escuro no hover */
+  color: #f9f9f9; /* Texto branco no hover */
+}
+
+.form-row > div {
+  display: inline-block; /* Transforma em elementos de linha */
+  margin-right: 20px; /* Adiciona margem à direita */
+}
+
+.form-row > div:last-child {
+  margin-right: 0; /* Remove a margem do último elemento */
+}
