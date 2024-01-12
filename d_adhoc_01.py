@@ -1,16 +1,16 @@
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
+#import seaborn as sns
+#import matplotlib.pyplot as plt
 import plotly.express as px
-import plotly.offline as py
+#import plotly.offline as py
 import folium
 from folium import Figure
-from branca.element import Figure
-from IPython.display import HTML
+#from branca.element import Figure
+#from IPython.display import HTML
 import plotly.graph_objs as go
-import requests
-import io
-from flask import Flask, render_template, request, redirect, url_for
+#import requests
+#import io
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
