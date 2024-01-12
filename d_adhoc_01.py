@@ -18,12 +18,28 @@ url = 'https://github.com/marcilioduarte/work-sebraemg-public/raw/main/data/empr
 
 df = pd.read_excel(url, engine='openpyxl')
 
+# Tratamento para a coluna situacao_cadastral
+dict_situacao_cadastral = {2: "Ativa", 4: "Inapta"}
+df['situacao_cadastral'] = df['situacao_cadastral'].map(dict_situacao_cadastral)
+
+# Tratamento para a coluna foi_atendido
+dict_foi_atendido = {0: "Não", 1: "Sim"}
+df['foi_atendido'] = df['foi_atendido'].map(dict_foi_atendido)
+
+# Tratamento para a coluna porte_empresa
+dict_porte_empresa = {1: "Micro empresa", 3: "EPP", 5: "Demais"}
+df['porte_empresa'] = df['porte_empresa'].map(dict_porte_empresa)
+
+# Tratamento de coluna de data
+df['data_inicio_atividade'] = pd.to_datetime(df['data_inicio_atividade'], format='%Y%m%d')
+df['data_inicio_atividade'] = df['data_inicio_atividade'].dt.strftime('%d/%m/%Y')
+
 def grafico_1(df):
     # Filtrando o DataFrame df para empresas ativas (situacao_cadastral igual a 2)
-    df_ativas = df[df['situacao_cadastral'] == 2]
+    df_ativas = df[df['situacao_cadastral'] == 'Ativa']
 
     # Filtrando o DataFrame df para empresas inaptas (situacao_cadastral igual a 4)
-    df_inaptas = df[df['situacao_cadastral'] == 4]
+    df_inaptas = df[df['situacao_cadastral'] == 'Inapta']
 
     # Agrupando e contando a quantidade de empresas ativas por município
     df_municipios_ativas = df_ativas['municipio'].value_counts().reset_index()
@@ -62,10 +78,10 @@ def grafico_1(df):
 
 def grafico_2(df):
     # Filtrando o DataFrame df para empresas atendidas (foi_atendido igual a 1)
-    df_atendidas = df[df['foi_atendido'] == 1]
+    df_atendidas = df[df['foi_atendido'] == 'Sim']
 
     # Filtrando o DataFrame df para empresas não atendidas (foi_atendido igual a 0)
-    df_nao_atendidas = df[df['foi_atendido'] == 0]
+    df_nao_atendidas = df[df['foi_atendido'] == 'Não']
 
     # Agrupando e contar a quantidade de empresas atendidas por município
     df_municipios_atendidas = df_atendidas['municipio'].value_counts().reset_index()
@@ -107,15 +123,15 @@ def grafico_2(df):
 
 def grafico_3(df):
     # Lista de municípios
-    situacao_cadastral = [2, 4]
+    situacao_cadastral = ['Ativa', 'Inapta']
 
     # Loop para criar um gráfico para cada município
     for situacao in situacao_cadastral:
-        if situacao == 2:
+        if situacao == 'Ativa':
             titulo = 'Percentual de Empresas Ativas Atendidas e Não atendidas por Município'
             # Cores personalizadas para empresas atendidas e não atendidas ATIVAS
             cores = ['#84f4bc', '#ffed69']
-        elif situacao == 4:
+        elif situacao == 'Inapta':
             titulo = 'Percentual de Empresas Inaptas Atendidas e Não atendidas por Município'
             # Cores personalizadas para empresas atendidas e não atendidas ATIVAS
             cores = ['#ffb380', '#f4455a']
@@ -123,10 +139,10 @@ def grafico_3(df):
         # Filtrando o DataFrame para o município atual
         df_situacao = df[df['situacao_cadastral'] == situacao]
         # Filtrar o DataFrame df para empresas atendidas (foi_atendido igual a 1)
-        df_atendidas = df_situacao[df_situacao['foi_atendido'] == 1]
+        df_atendidas = df_situacao[df_situacao['foi_atendido'] == 'Sim']
 
         # Filtrar o DataFrame df para empresas não atendidas (foi_atendido igual a 0)
-        df_nao_atendidas = df_situacao[df_situacao['foi_atendido'] == 0]
+        df_nao_atendidas = df_situacao[df_situacao['foi_atendido'] == 'Não']
 
         # Agrupar e contar a quantidade de empresas atendidas por município
         df_municipios_atendidas = df_atendidas['municipio'].value_counts().reset_index()
@@ -165,7 +181,7 @@ def grafico_3(df):
 def grafico_4(df, municipio):
 
     # Dicionário de cores para a coluna foi_atendido
-    cores = {0: '#ffabab', 1: '#e4f998'}
+    cores = {'Não': '#ffabab', 'Sim': '#e4f998'}
     
     # Filtrando o DataFrame para o município atual
     df_municipio = df[df['municipio'] == municipio]
@@ -184,7 +200,7 @@ def grafico_4(df, municipio):
         df_filtrado = df_categ[df_categ['foi_atendido'] == atendido]
         trace = go.Bar(x=df_filtrado['ds_cnae'], y=df_filtrado['Quantidade de Empresas'],
                     text=df_filtrado['% do Total'].round(2).astype(str) + '%',
-                    name=f'Empresas {"" if atendido == 1 else "Não "}Atendidas',
+                    name=f'Empresas {"" if atendido == "Sim" else "Não "}Atendidas',
                     marker=dict(color=color),
                     hoverinfo='text',
                     hovertext=df_filtrado.apply(lambda row: f'CNAE: {row["ds_cnae"]}<br>Total de Empresas: {row["Total por CNAE"]}<br>' +
@@ -300,18 +316,29 @@ def index():
         municipio = request.form.get('municipio')
 
         if all([situacao_cadastral, foi_atendido, porte_empresa, opcao_mei, municipio, cnae]):
-            df_filtrado = df[(df['situacao_cadastral'] == int(situacao_cadastral)) & 
-                             (df['foi_atendido'] == int(foi_atendido)) & 
+            df_filtrado = df[(df['situacao_cadastral'] == situacao_cadastral) & 
+                             (df['foi_atendido'] == foi_atendido) & 
                              (df['municipio'] == municipio) & 
-                             (df['porte_empresa'] == int(porte_empresa)) & 
+                             (df['porte_empresa'] == porte_empresa) & 
                              (df['opcao_mei'] == opcao_mei) &
                              (df['ds_cnae'] == cnae)]
 
             mapa = folium.Map(location=[-18.5122, -44.5550], zoom_start=7)
-            for _, row in df_filtrado.iterrows():
+            for _, empresa in df_filtrado.iterrows():
+                popup_text=f"CNPJ: {empresa['cnpj_completo']}<br><br>" \
+                     f"Razão Social: {empresa['razao_social']}<br><br>" \
+                     f"Nome Fantasia: {empresa['nome_fantasia']}<br><br>" \
+                     f"Opção pelo Simples: {empresa['opcao_simples']}<br><br>" \
+                     f"Matriz ou Filial: {empresa['identificador_matriz_filial']}<br><br>" \
+                     f"Data de Início de Atividade: {empresa['data_inicio_atividade']}<br><br>" \
+                     f"Código CNAE: {empresa['cnae_fiscal_principal']}<br><br>" \
+                     f"Descrição CNAE: {empresa['ds_cnae']}<br><br>" \
+                     f"Endereço: {empresa['endereco_completo']}<br><br>"\
+                     f"Quantidade de atendimentos: {empresa['quantidade_atendimentos']}"
                 folium.Marker(
-                    location=[row['latitude'], row['longitude']],
-                    popup=f"{row['razao_social']}<br>{row['endereco_completo']}"
+                    location=[empresa['latitude'], empresa['longitude']],
+                    popup=popup_text,
+                    icon=folium.Icon(icon='briefcase', color='black')
                 ).add_to(mapa)
             mapa_html = mapa._repr_html_()
         else:

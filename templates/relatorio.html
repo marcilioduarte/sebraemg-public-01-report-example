@@ -84,7 +84,7 @@
 
     <form action="/mapa" method="post">
         <div>
-            <label for="situacao_cadastral">Situação Cadastral:</label>
+            <label for="situacao_cadastral">Sit. Cadast.</label>
             <select name="situacao_cadastral" id="situacao_cadastral">
                 {% for opcao in situacao_cadastral %}
                     <option value="{{ opcao }}">{{ opcao }}</option>
@@ -93,7 +93,7 @@
         </div>
 
         <div>
-            <label for="foi_atendido">Empresas atendidas:</label>
+            <label for="foi_atendido">Atendida?</label>
             <select name="foi_atendido" id="foi_atendido">
                 {% for opcao in foi_atendido %}
                     <option value="{{ opcao }}">{{ opcao }}</option>
@@ -102,7 +102,7 @@
         </div>
 
         <div>
-            <label for="porte_empresa">Porte da Empresa:</label>
+            <label for="porte_empresa">Porte</label>
             <select name="porte_empresa" id="porte_empresa">
                 {% for opcao in porte_empresa %}
                     <option value="{{ opcao }}">{{ opcao }}</option>
@@ -111,7 +111,7 @@
         </div>
 
         <div>
-            <label for="opcao_mei">Opção MEI:</label>
+            <label for="opcao_mei">Opção MEI</label>
             <select name="opcao_mei" id="opcao_mei">
                 {% for opcao in opcao_mei %}
                     <option value="{{ opcao }}">{{ opcao }}</option>
@@ -120,7 +120,7 @@
         </div>
 
         <div>
-            <label for="municipio">Município:</label>
+            <label for="municipio">Município</label>
             <select name="municipio" id="municipio">
                 {% for opcao in municipios %}
                     <option value="{{ opcao }}">{{ opcao }}</option>
@@ -129,7 +129,7 @@
         </div>
 
         <div>
-            <label for="cnae">CNAE:</label>
+            <label for="cnae">CNAE</label>
             <select name="cnae" id="cnae">
                 {% for opcao in cnae %}
                     <option value="{{ opcao }}">{{ opcao }}</option>
