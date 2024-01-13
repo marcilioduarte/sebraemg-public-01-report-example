@@ -21,8 +21,8 @@ color: #000000;
 padding-top: 80px; /* Ajuste para a barra de navegação */
 }
 nav {
-  background-color: #f9f9f9; 
-  color: #005eb8;
+  background-color: #141c2c; 
+  color: #ffffff;
   position: fixed;
   top: 0;
   width: 100%;
@@ -44,15 +44,15 @@ nav ul li {
 }
 nav ul li a {
   display: block;
-  color: #005eb8;
+  color: #ffffff;
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
   font-weight: bold;
 }
 nav ul li a:hover {
-  background-color: #004b87;
-  color: #f9f9f9;
+  background-color: #ffffff;
+  color: #141c2c;
 }
 html {
   scroll-behavior: smooth;
@@ -95,15 +95,15 @@ font-size: large;
 
 .nav-links li a {
   display: block;
-  color: #005eb8; /* Cor do texto azul Sebrae */
+  color: #ffffff; /* Cor do texto branco */
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
 }
 
 .nav-links li a:hover {
-  background-color: #004b87; /* Fundo mais escuro no hover */
-  color: #f9f9f9; /* Texto branco no hover */
+  background-color: #ffffff; /* Fundo mais claro no hover */
+  color: #141c2c; /* Texto escuro no hover */
 }
 
 .form-row > div {
