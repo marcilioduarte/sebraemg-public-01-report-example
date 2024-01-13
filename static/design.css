@@ -114,3 +114,8 @@ font-size: large;
 .form-row > div:last-child {
   margin-right: 0; /* Remove a margem do último elemento */
 }
+
+.tamanho-icone {
+  width: 50px; /* Ajuste de tamanho do ícone .png */
+  height: 50px; /* Ajuste de tamanho do ícone .png */
+}
