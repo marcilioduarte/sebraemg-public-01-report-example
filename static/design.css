@@ -14,12 +14,12 @@ p {
   font-size: 18px; /* Ajuste para o tamanho desejado */
 }
 
-
 body {
 background-color: #f9f9f9;
 color: #000000;
 padding-top: 80px; /* Ajuste para a barra de navegação */
 }
+
 nav {
   background-color: #141c2c; 
   color: #ffffff;
@@ -27,21 +27,24 @@ nav {
   top: 0;
   width: 100%;
   z-index: 1000;
-  font-size: 32px;
+  font-size: 28px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 10px;
 }
+
 nav ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
   overflow: hidden;
 }
+
 nav ul li {
   float: left;
 }
+
 nav ul li a {
   display: block;
   color: #ffffff;
@@ -50,10 +53,12 @@ nav ul li a {
   text-decoration: none;
   font-weight: bold;
 }
+
 nav ul li a:hover {
   background-color: #ffffff;
   color: #141c2c;
 }
+
 html {
   scroll-behavior: smooth;
 }
@@ -64,6 +69,7 @@ text-align: center;
 color: #000000;
 font-size: large;
 }
+
 #grafico4 {
   background-color: #f9f9f9;
   color: #000000;
@@ -116,6 +122,6 @@ font-size: large;
 }
 
 .tamanho-icone {
-  width: 50px; /* Ajuste de tamanho do ícone .png */
-  height: 50px; /* Ajuste de tamanho do ícone .png */
+  width: 100px; /* Ajuste de tamanho do ícone .png */
+  height: 100px; /* Ajuste de tamanho do ícone .png */
 }
