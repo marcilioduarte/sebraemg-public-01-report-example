@@ -123,63 +123,45 @@ def grafico_2(df):
     # Exibindo o gráfico interativo
     return fig.to_html(full_html=False)
 
-def grafico_3(df):
-    # Lista de municípios
-    situacao_cadastral = ['Ativa', 'Inapta']
-
-    # Loop para criar um gráfico para cada município
-    for situacao in situacao_cadastral:
-        if situacao == 'Ativa':
-            titulo = 'Percentual de Empresas Ativas Atendidas e Não atendidas por Município'
+def grafico_3(df, situacao_cadastral_selecionada):
+    
+    titulo = 'Percentual de Empresas Ativas Atendidas e Não atendidas por Município'
             # Cores personalizadas para empresas atendidas e não atendidas ATIVAS
-            cores = ['#84f4bc', '#ffed69']
-        elif situacao == 'Inapta':
-            titulo = 'Percentual de Empresas Inaptas Atendidas e Não atendidas por Município'
-            # Cores personalizadas para empresas atendidas e não atendidas ATIVAS
-            cores = ['#ffb380', '#f4455a']
+    cores = ['#84f4bc', '#ffed69'] if situacao_cadastral_selecionada == 'Ativa' else ['#ffb380', '#f4455a']
 
-        # Filtrando o DataFrame para o município atual
-        df_situacao = df[df['situacao_cadastral'] == situacao]
-        # Filtrar o DataFrame df para empresas atendidas (foi_atendido igual a 1)
-        df_atendidas = df_situacao[df_situacao['foi_atendido'] == 'Sim']
-
-        # Filtrar o DataFrame df para empresas não atendidas (foi_atendido igual a 0)
-        df_nao_atendidas = df_situacao[df_situacao['foi_atendido'] == 'Não']
-
-        # Agrupar e contar a quantidade de empresas atendidas por município
-        df_municipios_atendidas = df_atendidas['municipio'].value_counts().reset_index()
-        df_municipios_atendidas.columns = ['Município', 'Empresas Atendidas']
-
-        # Agrupar e contar a quantidade de empresas inaptas por município
-        df_municipios_nao_atendidas = df_nao_atendidas['municipio'].value_counts().reset_index()
-        df_municipios_nao_atendidas.columns = ['Município', 'Empresas Não Atendidas']
-
-        # Mesclar os DataFrames de empresas atendidas e não atendidas por município
-        df_municipios = df_municipios_atendidas.merge(df_municipios_nao_atendidas, on='Município', how='outer').fillna(0)
-        df_municipios['Total de Empresas'] = df_municipios['Empresas Atendidas'] + df_municipios['Empresas Não Atendidas']
-        
-        # Calcular as porcentagens de empresas atendidas e não atendidas
-        df_municipios['% Empresas Atendidas'] = (df_municipios['Empresas Atendidas'] / (df_municipios['Empresas Não Atendidas'] + df_municipios['Empresas Atendidas'])) * 100
-        df_municipios['% Empresas Não Atendidas'] = (df_municipios['Empresas Não Atendidas'] / (df_municipios['Empresas Não Atendidas'] + df_municipios['Empresas Atendidas'])) * 100
-
-        # Criar um gráfico de barras empilhadas interativo com Plotly Express
-        fig = px.bar(df_municipios, x='Município', y=['% Empresas Atendidas', '% Empresas Não Atendidas'],
-                    labels={'Município': 'Município', 'value': 'Percentual de Empresas'},
-                    title=titulo,
-                    color_discrete_sequence=cores)
-
-
-        # Atualizar o layout para tornar o gráfico mais legível
-        fig.update_layout(xaxis_title=None, yaxis_title='Percentual de Empresas', plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9', font=dict(color="#000000"))
-
-        # Adicionar rótulos de texto personalizados
-        fig.update_traces(texttemplate='%{y:.2f}%', textposition='inside', 
-                        hovertemplate='<b>%{x}</b><br>Total de Empresas: %{customdata[4]}<br>Empresas Atendidas: %{customdata[2]}<br>Empresas Não Atendidas: %{customdata[3]}<br>% Empresas Atendidas: %{customdata[0]:.2f}%<br>% Empresas Não Atendidas: %{customdata[1]:.2f}%',
-                        customdata=df_municipios[['% Empresas Atendidas', '% Empresas Não Atendidas', 'Empresas Atendidas', 'Empresas Não Atendidas', 'Total de Empresas']].values)
-        
-        # Exibir o gráfico interativo
-        return fig.to_html(full_html=False)
-
+    # Filtrando o DataFrame para o município atual
+    df_situacao = df[df['situacao_cadastral'] == situacao_cadastral_selecionada]
+    # Filtrar o DataFrame df para empresas atendidas (foi_atendido igual a 1)
+    df_atendidas = df_situacao[df_situacao['foi_atendido'] == 'Sim']
+    # Filtrar o DataFrame df para empresas não atendidas (foi_atendido igual a 0)
+    df_nao_atendidas = df_situacao[df_situacao['foi_atendido'] == 'Não']
+    # Agrupar e contar a quantidade de empresas atendidas por município
+    df_municipios_atendidas = df_atendidas['municipio'].value_counts().reset_index()
+    df_municipios_atendidas.columns = ['Município', 'Empresas Atendidas']
+    # Agrupar e contar a quantidade de empresas inaptas por município
+    df_municipios_nao_atendidas = df_nao_atendidas['municipio'].value_counts().reset_index()
+    df_municipios_nao_atendidas.columns = ['Município', 'Empresas Não Atendidas']
+    # Mesclar os DataFrames de empresas atendidas e não atendidas por município
+    df_municipios = df_municipios_atendidas.merge(df_municipios_nao_atendidas, on='Município', how='outer').fillna(0)
+    df_municipios['Total de Empresas'] = df_municipios['Empresas Atendidas'] + df_municipios['Empresas Não Atendidas']
+    
+    # Calcular as porcentagens de empresas atendidas e não atendidas
+    df_municipios['% Empresas Atendidas'] = (df_municipios['Empresas Atendidas'] / (df_municipios['Empresas Não Atendidas'] + df_municipios['Empresas Atendidas'])) * 100
+    df_municipios['% Empresas Não Atendidas'] = (df_municipios['Empresas Não Atendidas'] / (df_municipios['Empresas Não Atendidas'] + df_municipios['Empresas Atendidas'])) * 100
+    # Criar um gráfico de barras empilhadas interativo com Plotly Express
+    fig = px.bar(df_municipios, x='Município', y=['% Empresas Atendidas', '% Empresas Não Atendidas'],
+                labels={'Município': 'Município', 'value': 'Percentual de Empresas'},
+                title=titulo,
+                color_discrete_sequence=cores)
+    # Atualizar o layout para tornar o gráfico mais legível
+    fig.update_layout(xaxis_title=None, yaxis_title='Percentual de Empresas', plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9', font=dict(color="#000000"))
+    # Adicionar rótulos de texto personalizados
+    fig.update_traces(texttemplate='%{y:.2f}%', textposition='inside', 
+                    hovertemplate='<b>%{x}</b><br>Total de Empresas: %{customdata[4]}<br>Empresas Atendidas: %{customdata[2]}<br>Empresas Não Atendidas: %{customdata[3]}<br>% Empresas Atendidas: %{customdata[0]:.2f}%<br>% Empresas Não Atendidas: %{customdata[1]:.2f}%',
+                    customdata=df_municipios[['% Empresas Atendidas', '% Empresas Não Atendidas', 'Empresas Atendidas', 'Empresas Não Atendidas', 'Total de Empresas']].values)
+    
+    # Exibir o gráfico interativo
+    return fig.to_html(full_html=False)
 def grafico_4(df, municipio):
 
     # Dicionário de cores para a coluna foi_atendido
@@ -224,45 +206,40 @@ def grafico_4(df, municipio):
     fig.update_traces(textposition='outside')
     return fig.to_html(full_html=False)
 
+def preparar_variaveis_comuns():
+    return {
+        'municipios': sorted(df['municipio'].unique().tolist()),
+        'situacao_cadastral_opcoes': sorted(df['situacao_cadastral'].unique().tolist()),
+        'foi_atendido_opcoes': sorted(df['foi_atendido'].unique().tolist()),
+        'porte_empresa_opcoes': sorted(df['porte_empresa'].unique().tolist()),
+        'opcao_mei_opcoes': sorted(df['opcao_mei'].unique().tolist()),
+        'cnae_opcoes': sorted(df['ds_cnae'].unique().tolist())
+    }
+
 ### Gerando APP
 
 @app.route('/')
 def relatorio():
+    variaveis_comuns = preparar_variaveis_comuns()
     grafico1_html = grafico_1(df)
     grafico2_html = grafico_2(df)
-    grafico3_html = grafico_3(df)
+    grafico3_html = grafico_3(df, situacao_cadastral_selecionada='Ativa')
     
     # Escolha um município padrão ou o primeiro da lista para exibir inicialmente
     municipio_padrao = df['municipio'].unique()[0]
     grafico4_html = grafico_4(df, municipio_padrao)
     
-    municipios = sorted(df['municipio'].unique().tolist())
-    situacao_cadastral_opcoes = sorted(df['situacao_cadastral'].unique().tolist())
-    foi_atendido_opcoes = sorted(df['foi_atendido'].unique().tolist())
-    porte_empresa_opcoes = sorted(df['porte_empresa'].unique().tolist())
-    opcao_mei_opcoes = sorted(df['opcao_mei'].unique().tolist())
-    cnae_opcoes = sorted(df['ds_cnae'].unique().tolist())
-    
     return render_template('relatorio.html', 
-                           grafico1_html=grafico1_html, 
-                           grafico2_html=grafico2_html, 
+                           grafico1_html=grafico1_html,
+                           grafico2_html=grafico2_html,
                            grafico3_html=grafico3_html,
-                           grafico4_html=grafico4_html, 
-                           municipios=municipios,
-                           situacao_cadastral=situacao_cadastral_opcoes,
-                           foi_atendido=foi_atendido_opcoes,
-                           porte_empresa=porte_empresa_opcoes,
-                           opcao_mei=opcao_mei_opcoes,
-                           cnae=cnae_opcoes)
+                           grafico4_html=grafico4_html,
+                           mapa_html=None,
+                           **variaveis_comuns)
 
 @app.route('/segregacao-cnae', methods=['GET', 'POST'])
 def grafico_municipio():
-    municipios = sorted(df['municipio'].unique().tolist())
-    situacao_cadastral_opcoes = sorted(df['situacao_cadastral'].unique().tolist())
-    foi_atendido_opcoes = sorted(df['foi_atendido'].unique().tolist())
-    porte_empresa_opcoes = sorted(df['porte_empresa'].unique().tolist())
-    opcao_mei_opcoes = sorted(df['opcao_mei'].unique().tolist())
-    cnae_opcoes = sorted(df['ds_cnae'].unique().tolist())
+    variaveis_comuns = preparar_variaveis_comuns()
     
     if request.method == 'POST':
         municipio_selecionado = request.form.get('municipio')
@@ -273,56 +250,68 @@ def grafico_municipio():
 
     grafico1_html = grafico_1(df)
     grafico2_html = grafico_2(df)
-    grafico3_html = grafico_3(df)
+    grafico3_html = grafico_3(df, situacao_cadastral_selecionada='Ativa')
     
     return render_template('relatorio.html', 
                            grafico1_html=grafico1_html, 
                            grafico2_html=grafico2_html, 
                            grafico3_html=grafico3_html,
-                           grafico4_html=grafico4_html, 
-                           municipios=municipios,
-                           situacao_cadastral=situacao_cadastral_opcoes,
-                           foi_atendido=foi_atendido_opcoes,
-                           porte_empresa=porte_empresa_opcoes,
-                           opcao_mei=opcao_mei_opcoes,
-                           cnae=cnae_opcoes)
+                           grafico4_html=grafico4_html,
+                           mapa_html=None,
+                           **variaveis_comuns)
+
+@app.route('/grafico-situacao-cadastral', methods=['POST'])
+def grafico_situacao_cadastral():
+    variaveis_comuns = preparar_variaveis_comuns()
+    situacao_cadastral_selecionada = request.form.get('situacao_cadastral')
+
+    # Gerar todos os gráficos e o mapa novamente
+    grafico1_html = grafico_1(df)
+    grafico2_html = grafico_2(df)
+    grafico3_html = grafico_3(df, situacao_cadastral_selecionada)
+
+     # Escolha um município padrão ou o primeiro da lista para exibir inicialmente
+    municipio_padrao = df['municipio'].unique()[0]
+    grafico4_html = grafico_4(df, municipio_padrao)
+ 
+    return render_template('relatorio.html', 
+                          grafico1_html=grafico1_html, 
+                          grafico2_html=grafico2_html, 
+                          grafico3_html=grafico3_html,
+                          grafico4_html=grafico4_html, 
+                          mapa_html=None,
+                          **variaveis_comuns)
 
 @app.route('/mapa', methods=['GET', 'POST'])
 def index():
-    # Inicialize variáveis comuns
-    municipios = sorted(df['municipio'].unique().tolist())
-    situacao_cadastral_opcoes = sorted(df['situacao_cadastral'].unique().tolist())
-    foi_atendido_opcoes = sorted(df['foi_atendido'].unique().tolist())
-    porte_empresa_opcoes = sorted(df['porte_empresa'].unique().tolist())
-    opcao_mei_opcoes = sorted(df['opcao_mei'].unique().tolist())
-    cnae_opcoes = sorted(df['ds_cnae'].unique().tolist())
+    variaveis_comuns = preparar_variaveis_comuns()
 
     # Geração dos primeiros 3 gráficos
     grafico1_html = grafico_1(df)
     grafico2_html = grafico_2(df)
-    grafico3_html = grafico_3(df)
+    grafico3_html = grafico_3(df, situacao_cadastral_selecionada='Ativa')
 
     # Gráfico 4 e Mapa - Inicialização
-    municipio_padrao = municipios[0]
+    municipio_padrao = df['municipio'].unique()[0]
     grafico4_html = grafico_4(df, municipio_padrao)
     mapa_html = None  # Inicializar o mapa como None ou com um mapa padrão
-
+    mostrar_modal = False
     if request.method == 'POST':
         # Atualiza o mapa com base nas seleções de filtros
-        situacao_cadastral = request.form.get('situacao_cadastral')
-        foi_atendido = request.form.get('foi_atendido')
-        porte_empresa = request.form.get('porte_empresa')
-        opcao_mei = request.form.get('opcao_mei')
-        cnae = request.form.get('cnae')
-        municipio = request.form.get('municipio')
+        situacao_cadastral = request.form.getlist('situacao_cadastral')
+        foi_atendido = request.form.getlist('foi_atendido')
+        porte_empresa = request.form.getlist('porte_empresa')
+        opcao_mei = request.form.getlist('opcao_mei')
+        cnae = request.form.getlist('cnae')
+        municipio = request.form.getlist('municipio')
 
         if all([situacao_cadastral, foi_atendido, porte_empresa, opcao_mei, municipio, cnae]):
-            df_filtrado = df[(df['situacao_cadastral'] == situacao_cadastral) & 
-                             (df['foi_atendido'] == foi_atendido) & 
-                             (df['municipio'] == municipio) & 
-                             (df['porte_empresa'] == porte_empresa) & 
-                             (df['opcao_mei'] == opcao_mei) &
-                             (df['ds_cnae'] == cnae)]
+            df_filtrado = df[(df['situacao_cadastral'].isin(situacao_cadastral)) & 
+                             (df['foi_atendido'].isin(foi_atendido)) & 
+                             (df['municipio'].isin(municipio)) & 
+                             (df['porte_empresa'].isin(porte_empresa)) & 
+                             (df['opcao_mei'].isin(opcao_mei)) &
+                             (df['ds_cnae'].isin(cnae))]
 
             mapa = folium.Map(location=[-18.5122, -44.5550], zoom_start=7)
             for _, empresa in df_filtrado.iterrows():
@@ -342,9 +331,10 @@ def index():
                     icon=folium.Icon(icon='briefcase', color='black')
                 ).add_to(mapa)
             mapa_html = mapa._repr_html_()
+            mostrar_modal = not all([situacao_cadastral, foi_atendido, porte_empresa, opcao_mei, municipio, cnae])
         else:
-            # Se não, exibe um mapa padrão
-            mapa_html = None
+            # Se não, exibe mensagem de erro
+            mostrar_modal = True
     else:
         mapa_html = None
 
@@ -353,13 +343,10 @@ def index():
                            grafico2_html=grafico2_html, 
                            grafico3_html=grafico3_html,
                            grafico4_html=grafico4_html, 
-                           municipios=municipios,
                            mapa_html=mapa_html,
-                           situacao_cadastral=situacao_cadastral_opcoes,
-                           foi_atendido=foi_atendido_opcoes,
-                           porte_empresa=porte_empresa_opcoes,
-                           opcao_mei=opcao_mei_opcoes,
-                           cnae=cnae_opcoes)
+                           mostrar_modal=mostrar_modal,
+                           **variaveis_comuns
+                           )
 
 if __name__ == '__main__':
     app.run(debug=True)

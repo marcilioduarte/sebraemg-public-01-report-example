@@ -9,7 +9,7 @@
 <body>
     <nav>
         <div class="nav-title">
-          <img src="{{ url_for('static', filename='inteligencia-sebrae-icon.png') }}" alt="Ícone Sebrae" class="header-icon tamanho-icone">  
+          <img src="{{ url_for('static', filename='inteligencia-sebrae-icon.svg') }}" alt="Ícone Sebrae" class="header-icon tamanho-icone">  
         </div>
         <ul class="nav-links">
             <li><a href="#sobre">Sobre</a></li>
@@ -74,12 +74,27 @@
             <li>Uberaba tem um percentual médio, de 25,7% de empresas atendidas; e</li>
             <li>Já Araguari e Uberlândia tem um percentual menor de empresas atendidas, de aproximadamente 22% e 18%, respectivamente.</li>
         </ul>
-        <br>   
-        <h3>Gráfico 3:</h3>                 
+        <br>  
+      </div> 
+      <!-- Área para Exibir o Gráfico 3 -->
+    <div id="grafico3" class="grafico3">
+      <h3>Gráfico 3:</h3>
+      <form action="/grafico-situacao-cadastral" method="post">
+          <label for="situacao_cadastral">Selecione a Situação Cadastral:</label>
+          <select name="situacao_cadastral" id="situacao_cadastral">
+              <option value="Ativa">Ativa</option>
+              <option value="Inapta">Inapta</option>
+          </select>
+          <br>
+          <input type="submit" value="Gerar Gráfico">
+        </form>
+        {% if grafico3_html %}
         {{ grafico3_html|safe }}
+        {% endif %}
         <p>Quando avaliamos as empresas atendidas e não atendidas de forma segregada por atividade ou inaptidão, a distribuição a nível municipal segue o mesmo padrão, com Araxá, Ituiutaba e Frutal sendo as cidades com mais atendimentos dentro do universo, Uberaba sendo a cidade com um nível médio de atendimentos e Araguari e Uberlândia sendo as cidades com menor percentual de empresas atendidas.</p>
         <p>Entretanto, a intensidade dos atendimentos muda quando avaliamos a situação cadastral atual das empresas, sendo que dentre as empresas atualmente ativas há um aumento considerável no percentual de empresas atendidas e entre as empresas inaptas há uma redução significativa.</p>
     </div>
+    <br>
     <!-- Área para Exibir o Gráfico 4 -->
     <div id="grafico4" class="grafico4">
         <br>      
@@ -105,100 +120,113 @@
             <div class="form-row">
                 <div>
                     <label for="situacao_cadastral">Sit. Cadast.</label>
-                    <select class="select2" name="situacao_cadastral" id="situacao_cadastral" multiple="multiple">
-                      {% for opcao in situacao_cadastral %}
+                    <select class ="js-example-basic-multiple" name="situacao_cadastral" id="situacao_cadastral" multiple="multiple">
+                      {% for opcao in situacao_cadastral_opcoes %}
                         <option value="{{ opcao }}">{{ opcao }}</option>
                       {% endfor %}
                     </select>
                     <button type="button" class="select-all" data-target="#situacao_cadastral">Selecionar Tudo</button>
-                    <button type="button" class="deselect-all" data-target="#situacao_cadastral">Desmarcar Tudo</button>
                 </div>
         
                 <div>
                     <label for="foi_atendido">Atendida?</label>
-                    <select class="select2" name="foi_atendido" id="foi_atendido" multiple="multiple">
-                      {% for opcao in foi_atendido %}
+                    <select class ="js-example-basic-multiple" name="foi_atendido" id="foi_atendido" multiple="multiple">
+                      {% for opcao in foi_atendido_opcoes %}
                         <option value="{{ opcao }}">{{ opcao }}</option>
                       {% endfor %}
                     </select>
                     <button type="button" class="select-all" data-target="#foi_atendido">Selecionar Tudo</button>
-                    <button type="button" class="deselect-all" data-target="#foi_atendido">Desmarcar Tudo</button>
                 </div>
                   
         
                 <div>
                     <label for="porte_empresa">Porte</label>
-                    <select class="select2" name="porte_empresa" id="porte_empresa" multiple="multiple">
-                      {% for opcao in porte_empresa %}
+                    <select class ="js-example-basic-multiple" name="porte_empresa" id="porte_empresa" multiple="multiple">
+                      {% for opcao in porte_empresa_opcoes %}
                         <option value="{{ opcao }}">{{ opcao }}</option>
                       {% endfor %}
                     </select>
                     <button type="button" class="select-all" data-target="#porte_empresa">Selecionar Tudo</button>
-                    <button type="button" class="deselect-all" data-target="#porte_empresa">Desmarcar Tudo</button>
                 </div>
         
                 <div>
                     <label for="opcao_mei">Opção MEI</label>
-                    <select class="select2" name="opcao_mei" id="opcao_mei" multiple="multiple">
-                      {% for opcao in opcao_mei %}
+                    <select class ="js-example-basic-multiple" name="opcao_mei" id="opcao_mei" multiple="multiple">
+                      {% for opcao in opcao_mei_opcoes %}
                         <option value="{{ opcao }}">{{ opcao }}</option>
                       {% endfor %}
                     </select>
                     <button type="button" class="select-all" data-target="#opcao_mei">Selecionar Tudo</button>
-                    <button type="button" class="deselect-all" data-target="#opcao_mei">Desmarcar Tudo</button>
                 </div>
-                  
-        
                 <div>
                     <label for="municipio">Município</label>
-                    <select class="select2" name="municipio" id="municipio" multiple="multiple">
+                    <select class ="js-example-basic-multiple" name="municipio" id="municipio" multiple="multiple">
                       {% for opcao in municipios %}
                         <option value="{{ opcao }}">{{ opcao }}</option>
                       {% endfor %}
                     </select>
                     <button type="button" class="select-all" data-target="#municipio">Selecionar Tudo</button>
-                    <button type="button" class="deselect-all" data-target="#municipio">Desmarcar Tudo</button>
                 </div>
-                  
-        
                 <div>
                     <label for="cnae">CNAE</label>
-                    <select class="select2" name="cnae" id="cnae" multiple="multiple">
-                      {% for opcao in cnae %}
+                    <select class ="js-example-basic-multiple" name="cnae" id="cnae" multiple="multiple">
+                      {% for opcao in cnae_opcoes %}
                         <option value="{{ opcao }}">{{ opcao }}</option>
                       {% endfor %}
                     </select>
                     <button type="button" class="select-all" data-target="#cnae">Selecionar Tudo</button>
-                    <button type="button" class="deselect-all" data-target="#cnae">Desmarcar Tudo</button>
-                </div>
-                  
+                </div>   
             </div>
             <input type="submit" value="Gerar Mapa">
         </form>
         {% if mapa_html %}
             <div>{{ mapa_html|safe }}</div>
         {% endif %}
+        <div id="alertModal" class="modal">
+          <div class="modal-content">
+              <span class="close">&times;</span>
+              <p>Você não aplicou todos os filtros. Aplique e tente novamente.</p>
+        </div>
+      </div>
     </div>
     <script>
-        $(document).ready(function() {
-          $('.select2').select2({
-            placeholder: "Selecione uma opção",
-            allowClear: true,
-            width: '100%'
-          });
-      
-          $('.select-all').click(function(){
-            var target = $(this).data('target');
-            $(target).find('option').prop('selected','selected');
-            $(target).trigger('change');
-          });
-      
-          $('.deselect-all').click(function(){
-            var target = $(this).data('target');
-            $(target).find('option').removeAttr('selected');
-            $(target).trigger('change');
-          });
+      $(document).ready(function() {
+        $('.js-example-basic-multiple').select2({
+          placeholder: "Selecione uma ou mais opções",
+          allowClear: true,
+          width: '100%'
         });
-    </script>  
+    
+        $('.select-all').click(function() {
+          var target = $(this).data('target');
+          $(target).find('option').prop('selected', 'selected');
+          $(target).trigger('change');
+        });
+    
+        $('.deselect-all').click(function() {
+          var target = $(this).data('target');
+          $(target).find('option').removeAttr('selected');
+          $(target).trigger('change');
+        });
+    
+        // Código para o modal
+        var modal = document.getElementById("alertModal");
+        var span = document.getElementsByClassName("close")[0];
+    
+        {% if mostrar_modal %}
+        modal.style.display = "block";
+        {% endif %}
+    
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+    
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+      });
+    </script>    
 </body>
 </html>
