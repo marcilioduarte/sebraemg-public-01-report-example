@@ -35,6 +35,8 @@ df['data_inicio_atividade'] = pd.to_datetime(df['data_inicio_atividade'], format
 df['data_inicio_atividade'] = df['data_inicio_atividade'].dt.strftime('%d/%m/%Y')
 
 df['opcao_mei'].fillna('Não identificado', inplace=True)
+dict_opcao_mei = {"N": "Não", "S": "Sim", "Não identificado": "Não identificado"}
+df['opcao_mei'] = df['opcao_mei'].map(dict_opcao_mei)
 
 def grafico_1(df):
     # Filtrando o DataFrame df para empresas ativas (situacao_cadastral igual a 2)
@@ -318,13 +320,16 @@ def index():
                 popup_text=f"CNPJ: {empresa['cnpj_completo']}<br><br>" \
                      f"Razão Social: {empresa['razao_social']}<br><br>" \
                      f"Nome Fantasia: {empresa['nome_fantasia']}<br><br>" \
+                     f"Empresa atendida? {empresa['foi_atendido']}<br><br>" \
+                     f"Quantidade de atendimentos: {empresa['quantidade_atendimentos']}<br><br>"\
+                     f"Código CNAE: {empresa['cnae_fiscal_principal']}<br><br>" \
+                     f"Descrição CNAE: {empresa['ds_cnae']}<br><br>" \
+                     f"Porte: {empresa['porte_empresa']}<br><br>" \
+                     f"Opção pelo MEI: {empresa['opcao_mei']}<br><br>" \
                      f"Opção pelo Simples: {empresa['opcao_simples']}<br><br>" \
                      f"Matriz ou Filial: {empresa['identificador_matriz_filial']}<br><br>" \
                      f"Data de Início de Atividade: {empresa['data_inicio_atividade']}<br><br>" \
-                     f"Código CNAE: {empresa['cnae_fiscal_principal']}<br><br>" \
-                     f"Descrição CNAE: {empresa['ds_cnae']}<br><br>" \
-                     f"Endereço: {empresa['endereco_completo']}<br><br>"\
-                     f"Quantidade de atendimentos: {empresa['quantidade_atendimentos']}"
+                     f"Endereço: {empresa['endereco_completo']}<br><br>"
                 folium.Marker(
                     location=[empresa['latitude'], empresa['longitude']],
                     popup=popup_text,
