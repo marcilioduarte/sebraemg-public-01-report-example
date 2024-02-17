@@ -1,6 +1,13 @@
-# Demandas Ad Hoc
+# Sobre o projeto:
 
-Projeto para deploy de demandas ad hoc públicas do meu trabalho no Sebrae Minas.
+Esse projeto consiste em um teste/exemplo utilizado para criar um novo e personalizado produto de relatório no meu trabalho no Sebrae Minas.
 
-Link do app d_adhoc_01 (versão inicial): 
+Link do app criado: 
+https://sebraemg-uine-adhoc01-5328a5782f7f.herokuapp.com/
+
+# About this project:
+
+This project consists in a test/example used to create a new and personalized report product at my job on Sebrae Minas.
+
+App Link: 
 https://sebraemg-uine-adhoc01-5328a5782f7f.herokuapp.com/
