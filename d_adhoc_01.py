@@ -14,7 +14,7 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-url = 'https://github.com/marcilioduarte/work-sebraemg-public/raw/main/data/empresas_ariel_3.xlsx'
+url = 'https://github.com/marcilioduarte/sebraemg-public-01-report-example/raw/main/data/empresas_ariel_3.xlsx'
 
 df = pd.read_excel(url, engine='openpyxl')
 
